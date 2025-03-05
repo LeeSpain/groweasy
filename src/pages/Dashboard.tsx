@@ -5,6 +5,8 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
 import TrialNotification from "@/components/dashboard/TrialNotification";
 import TaskUsageAlert from "@/components/dashboard/TaskUsageAlert";
+import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
+import KnowledgeBase from "@/components/dashboard/KnowledgeBase";
 import { mockTasks } from "@/components/dashboard/mockData";
 import { useAuth } from "@/context/AuthContext";
 import { User as CommandDemoUser, Task as CommandDemoTask, UserSubscription as CommandDemoSubscription } from "@/components/command-demo/types";
@@ -69,9 +71,14 @@ const Dashboard = () => {
       <DashboardHeader user={commandDemoUser} />
       
       <div className="layout py-8">
+        {/* Welcome section with date, time and weather */}
+        <div className="mb-6 animate-fade-in-down">
+          <WelcomeHeader user={commandDemoUser} />
+        </div>
+        
         {/* Trial notification */}
         {user.subscription.status === "trial" && user.subscription.trialEndDate && (
-          <div className="mb-6 animate-fade-in-down">
+          <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "100ms" }}>
             <TrialNotification 
               trialEndDate={user.subscription.trialEndDate} 
               onManageClick={() => setActiveTab("settings")}
@@ -81,7 +88,7 @@ const Dashboard = () => {
         
         {/* Alerts section */}
         {isLowOnTasks && (
-          <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "100ms" }}>
+          <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "200ms" }}>
             <TaskUsageAlert
               tasksUsed={user.subscription.tasksUsed}
               tasksLimit={user.subscription.tasksLimit}
@@ -91,17 +98,20 @@ const Dashboard = () => {
         )}
         
         {/* Main dashboard content */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left sidebar with stats */}
-          <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+          <div className="lg:col-span-3 animate-fade-in-up space-y-6" style={{ animationDelay: "300ms" }}>
             <DashboardSidebar 
               user={commandDemoUser}
               subscription={userSubscription}
             />
+            
+            {/* Knowledge Base */}
+            <KnowledgeBase />
           </div>
           
           {/* Main content area */}
-          <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: "300ms" }}>
+          <div className="lg:col-span-9 animate-fade-in-up" style={{ animationDelay: "400ms" }}>
             <DashboardTabs
               user={commandDemoUser}
               tasks={adaptedTasks}

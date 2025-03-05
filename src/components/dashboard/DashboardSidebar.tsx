@@ -6,6 +6,7 @@ import UsageStats from "@/components/dashboard/UsageStats";
 import SubscriptionDetails from "@/components/dashboard/SubscriptionDetails";
 import { User } from "@/components/command-demo/types";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 interface DashboardSidebarProps {
   user: User;
@@ -16,30 +17,31 @@ const DashboardSidebar = ({ user, subscription }: DashboardSidebarProps) => {
   const navigate = useNavigate();
   
   return (
-    <div className="lg:col-span-1 space-y-6">
-      <Card>
-        <CardHeader className="pb-2">
+    <div className="space-y-6">
+      <Card className="overflow-hidden border-border/50">
+        <CardHeader className="bg-secondary/40 pb-2 border-b">
           <CardTitle className="text-base font-medium">Usage Summary</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <UsageStats subscription={subscription} />
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader className="pb-2">
+      <Card className="overflow-hidden border-border/50">
+        <CardHeader className="bg-secondary/40 pb-2 border-b">
           <CardTitle className="text-base font-medium">Subscription</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           <SubscriptionDetails user={user} />
           <div className="mt-4">
             <Button 
               variant="outline" 
               size="sm" 
-              fullWidth
+              className="w-full justify-between"
               onClick={() => navigate("/upgrade")}
             >
-              Upgrade Plan
+              <span>Upgrade Plan</span>
+              <ArrowRight className="h-3 w-3" />
             </Button>
           </div>
         </CardContent>

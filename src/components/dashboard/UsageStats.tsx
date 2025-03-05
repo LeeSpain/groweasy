@@ -1,7 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui-custom/Card";
 import { Progress } from "@/components/ui/progress";
-import { Label } from "@/components/ui/label";
 import { UserSubscription } from "@/components/command-demo/types";
 
 interface UsageStatsProps {
@@ -20,12 +19,12 @@ export default function UsageStats({ subscription }: UsageStatsProps) {
   );
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <Card>
-        <CardHeader className="pb-2">
+    <div className="space-y-6">
+      <Card className="overflow-hidden border-border/50">
+        <CardHeader className="bg-secondary/40 pb-2">
           <CardTitle className="text-sm font-medium">Tasks Usage</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <div className="text-xs text-muted-foreground">
@@ -36,6 +35,8 @@ export default function UsageStats({ subscription }: UsageStatsProps) {
             <Progress 
               value={tasksPercentage} 
               className="h-2"
+              // Add color based on usage level
+              color={tasksPercentage > 80 ? "bg-amber-500" : tasksPercentage > 95 ? "bg-red-500" : ""}
             />
             <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <div>{subscription.tasksLimit - subscription.tasksUsed} tasks remaining</div>
@@ -47,11 +48,11 @@ export default function UsageStats({ subscription }: UsageStatsProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="pb-2">
+      <Card className="overflow-hidden border-border/50">
+        <CardHeader className="bg-secondary/40 pb-2">
           <CardTitle className="text-sm font-medium">Websites</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <div className="text-xs text-muted-foreground">
@@ -62,6 +63,8 @@ export default function UsageStats({ subscription }: UsageStatsProps) {
             <Progress 
               value={websitesPercentage} 
               className="h-2"
+              // Add color based on usage level
+              color={websitesPercentage > 80 ? "bg-amber-500" : websitesPercentage > 95 ? "bg-red-500" : ""}
             />
             <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <div>{subscription.websitesLimit - subscription.websites.length} slots available</div>
