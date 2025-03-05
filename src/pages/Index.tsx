@@ -11,13 +11,15 @@ import Testimonials from "@/components/Testimonials";
 const Index = () => {
   return (
     <MainLayout>
-      <Hero />
-      <Features />
-      <WebsiteAnalyzer />
-      <CommandDemo />
-      <AutomationCategories />
-      <Pricing />
-      <Testimonials />
+      <div className="flex flex-col items-center">
+        <Hero />
+        <Features />
+        <WebsiteAnalyzer />
+        <CommandDemo />
+        <AutomationCategories />
+        <Pricing />
+        <Testimonials />
+      </div>
     </MainLayout>
   );
 };

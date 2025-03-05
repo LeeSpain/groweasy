@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui-custom/Button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Mail, Zap } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -9,9 +9,12 @@ const Footer = () => {
       <div className="layout py-16">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-8">
           <div className="lg:col-span-2">
-            <a href="/" className="inline-block mb-4">
-              <span className="font-semibold text-xl tracking-tight">GrowEasy</span>
-            </a>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10">
+                <Zap className="h-4 w-4 text-primary" />
+              </div>
+              <span className="font-semibold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">GrowEasy</span>
+            </div>
             <p className="text-muted-foreground mb-6 max-w-md">
               The AI-powered automation platform that makes business growth simple, secure, and all under your control. No tech skills required.
             </p>
@@ -26,7 +29,7 @@ const Footer = () => {
                     className="pl-10"
                   />
                 </div>
-                <Button>
+                <Button className="shadow-sm hover:shadow-md transition-all">
                   Subscribe
                 </Button>
               </form>

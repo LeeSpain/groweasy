@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui-custom/Button';
 import { cn } from '@/lib/utils';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X, User, Zap } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
@@ -31,8 +31,11 @@ const Navbar = () => {
       )}
     >
       <div className="layout flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 z-20">
-          <span className="font-semibold text-xl tracking-tight">GrowEasy</span>
+        <Link to="/" className="flex items-center gap-2 z-20 group">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            <Zap className="h-4 w-4 text-primary" />
+          </div>
+          <span className="font-semibold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">GrowEasy</span>
         </Link>
         
         <nav className="hidden md:flex items-center gap-8">
@@ -49,12 +52,14 @@ const Navbar = () => {
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/dashboard')}
+                className="hover:bg-primary/10"
               >
                 Dashboard
               </Button>
               <Button 
                 size="sm"
                 onClick={logout}
+                className="shadow-sm hover:shadow-md transition-all"
               >
                 Logout
               </Button>
@@ -65,12 +70,14 @@ const Navbar = () => {
                 variant="ghost" 
                 size="sm"
                 onClick={() => navigate('/login')}
+                className="hover:bg-primary/10"
               >
                 Login
               </Button>
               <Button 
                 size="sm"
                 onClick={() => navigate('/upgrade')}
+                className="shadow-sm hover:shadow-md transition-all"
               >
                 Start Free Trial
               </Button>
@@ -97,6 +104,15 @@ const Navbar = () => {
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           )}
         >
+          <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+              <Zap className="h-5 w-5 text-primary" />
+            </div>
+            <span className="font-semibold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
+              GrowEasy
+            </span>
+          </div>
+          
           <nav className="flex flex-col items-center gap-8">
             <a 
               href="#features" 
@@ -147,6 +163,7 @@ const Navbar = () => {
                     logout();
                     setIsMobileMenuOpen(false);
                   }}
+                  className="shadow-sm"
                 >
                   Logout
                 </Button>
@@ -169,6 +186,7 @@ const Navbar = () => {
                     navigate('/upgrade');
                     setIsMobileMenuOpen(false);
                   }}
+                  className="shadow-sm"
                 >
                   Start Free Trial
                 </Button>
