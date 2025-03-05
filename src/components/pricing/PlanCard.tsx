@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui-custom/Button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui-custom/Card";
 import { Check, HelpCircle } from "lucide-react";
@@ -17,6 +18,7 @@ interface PlanCardProps {
 }
 
 const PlanCard = ({ plan, billingCycle }: PlanCardProps) => {
+  const navigate = useNavigate();
   const yearlyPrice = Math.round(plan.price * 0.8);
   const currentPrice = billingCycle === "yearly" ? yearlyPrice : plan.price;
   
@@ -51,6 +53,9 @@ const PlanCard = ({ plan, billingCycle }: PlanCardProps) => {
               Billed €{yearlyPrice * 12} yearly
             </p>
           )}
+          <div className="text-xs text-green-600 font-medium mt-2">
+            7-day free trial
+          </div>
         </div>
       </CardHeader>
       
@@ -185,6 +190,7 @@ const PlanCard = ({ plan, billingCycle }: PlanCardProps) => {
           fullWidth 
           size="lg"
           variant={plan.mostPopular ? "primary" : "outline"}
+          onClick={() => navigate("/upgrade")}
         >
           {plan.cta}
         </Button>

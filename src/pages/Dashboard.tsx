@@ -12,17 +12,19 @@ import WebsiteManager from "@/components/dashboard/WebsiteManager";
 import UsageStats from "@/components/dashboard/UsageStats";
 import SubscriptionDetails from "@/components/dashboard/SubscriptionDetails";
 import { ArrowUpRight, Bell, Settings } from "lucide-react";
-import { mockUser, mockTasks } from "@/components/dashboard/mockData";
+import { mockTasks } from "@/components/dashboard/mockData";
+import { useAuth } from "@/context/AuthContext";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("command");
   const navigate = useNavigate();
+  const { user } = useAuth();
   
-  // In a real app, this would come from authentication
-  const user = mockUser;
+  // If no user, this should never happen due to ProtectedRoute
+  if (!user) return null;
   
-  // Check if subscription is active
-  const isSubscriptionActive = user.subscription.status === "active";
+  // Check if subscription is active or on trial
+  const isSubscriptionActive = user.subscription.status === "active" || user.subscription.status === "trial";
   
   // Calculate task usage
   const taskUsage = (user.subscription.tasksUsed / user.subscription.tasksLimit) * 100;
@@ -34,6 +36,27 @@ const Dashboard = () => {
         <DashboardHeader user={user} />
         
         <div className="layout py-8">
+          {/* Trial notification */}
+          {user.subscription.status === "trial" && user.subscription.trialEndDate && (
+            <Card className="mb-6 border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+              <CardContent className="flex items-center justify-between p-4">
+                <div className="flex items-center gap-3">
+                  <Bell className="text-blue-500" size={20} />
+                  <p className="text-sm font-medium">
+                    Your free trial ends on {user.subscription.trialEndDate}. We'll only charge you if you don't cancel before then.
+                  </p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setActiveTab("settings")}
+                >
+                  Manage Subscription
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+          
           {/* Alerts section */}
           {isLowOnTasks && (
             <Card className="mb-6 border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20">
@@ -115,7 +138,21 @@ const Dashboard = () => {
                   <Card>
                     <CardContent className="p-6">
                       <h3 className="text-xl font-medium mb-4">Account Settings</h3>
-                      <p className="text-muted-foreground">
+                      
+                      {user.subscription.status === "trial" && (
+                        <div className="mb-6 p-4 border border-blue-200 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                          <h4 className="font-medium mb-2">Free Trial Information</h4>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            Your free trial ends on {user.subscription.trialEndDate}. After this date, 
+                            your card will be charged automatically unless you cancel.
+                          </p>
+                          <Button variant="outline" size="sm">
+                            Cancel Subscription
+                          </Button>
+                        </div>
+                      )}
+                      
+                      <p className="text-muted-foreground mb-4">
                         Update your account settings, manage notifications, and configure your preferences.
                       </p>
                       <div className="flex gap-3 mt-4">

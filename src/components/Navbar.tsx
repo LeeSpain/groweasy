@@ -1,12 +1,16 @@
 
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui-custom/Button';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,9 +31,9 @@ const Navbar = () => {
       )}
     >
       <div className="layout flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2 z-20">
+        <Link to="/" className="flex items-center gap-2 z-20">
           <span className="font-semibold text-xl tracking-tight">GrowEasy</span>
-        </a>
+        </Link>
         
         <nav className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>
@@ -39,8 +43,39 @@ const Navbar = () => {
         </nav>
         
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm">Login</Button>
-          <Button size="sm">Start Free Trial</Button>
+          {isAuthenticated ? (
+            <>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate('/dashboard')}
+              >
+                Dashboard
+              </Button>
+              <Button 
+                size="sm"
+                onClick={logout}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate('/login')}
+              >
+                Login
+              </Button>
+              <Button 
+                size="sm"
+                onClick={() => navigate('/upgrade')}
+              >
+                Start Free Trial
+              </Button>
+            </>
+          )}
         </div>
         
         <button 
@@ -94,8 +129,51 @@ const Navbar = () => {
           </nav>
           
           <div className="flex flex-col gap-4 w-full max-w-[200px]">
-            <Button variant="outline" fullWidth>Login</Button>
-            <Button fullWidth>Start Free Trial</Button>
+            {isAuthenticated ? (
+              <>
+                <Button 
+                  variant="outline" 
+                  fullWidth
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Dashboard
+                </Button>
+                <Button 
+                  fullWidth
+                  onClick={() => {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  variant="outline" 
+                  fullWidth
+                  onClick={() => {
+                    navigate('/login');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Login
+                </Button>
+                <Button 
+                  fullWidth
+                  onClick={() => {
+                    navigate('/upgrade');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Start Free Trial
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
