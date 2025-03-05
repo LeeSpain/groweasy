@@ -41,6 +41,11 @@ const Dashboard = () => {
     }
   };
   
+  // Add trial end date to the command demo user subscription if it exists in the auth user
+  if (user.subscription.trialEndDate) {
+    userSubscription.trialEndDate = user.subscription.trialEndDate;
+  }
+  
   // Convert AuthContext User to the format expected by other components
   const commandDemoUser: CommandDemoUser = {
     id: user.id,
@@ -50,13 +55,6 @@ const Dashboard = () => {
     subscription: userSubscription,
     avatar: user.avatar
   };
-  
-  // Add trial end date to the command demo user if it exists in the auth user
-  if (user.subscription.trialEndDate) {
-    // Since CommandDemoSubscription type doesn't have trialEndDate property, 
-    // we need to add it as a custom property
-    (commandDemoUser.subscription as any).trialEndDate = user.subscription.trialEndDate;
-  }
   
   // Adapt mockTasks to the CommandDemoTask format
   const adaptedTasks: CommandDemoTask[] = mockTasks.map(task => ({

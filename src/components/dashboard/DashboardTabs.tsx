@@ -15,14 +15,9 @@ interface DashboardTabsProps {
 }
 
 const DashboardTabs = ({ user, tasks, onTabChange, activeTab }: DashboardTabsProps) => {
-  // Get trial information from user.subscription
-  // We need to handle the difference between the CommandDemoUser type (which uses "active", "inactive", "pending")
-  // and the AuthContext type which might use "trial"
-  
-  // Determine if this is a trial by checking if trialEndDate exists in user object
-  // This is a safer way to determine trial status without relying on status="trial"
-  const isTrialActive = 'trialEndDate' in user.subscription;
-  const trialEndDate = isTrialActive ? user.subscription.trialEndDate : undefined;
+  // Determine if this is a trial by checking if trialEndDate exists in user subscription
+  const isTrialActive = !!user.subscription.trialEndDate;
+  const trialEndDate = user.subscription.trialEndDate;
   
   return (
     <div className="lg:col-span-3 space-y-6">

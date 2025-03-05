@@ -36,6 +36,7 @@ export interface UserSubscription {
   tasksLimit: number;
   websites: string[];
   websitesLimit: number;
+  trialEndDate?: string; // Add the optional trialEndDate property
   addOns: {
     extraTasks: number;
     extraWebsites: number;
