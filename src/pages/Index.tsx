@@ -11,7 +11,7 @@ import Testimonials from "@/components/Testimonials";
 const Index = () => {
   return (
     <MainLayout>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center w-full">
         <Hero />
         <Features />
         <WebsiteAnalyzer />

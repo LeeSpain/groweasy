@@ -65,16 +65,27 @@ const WebsiteAnalyzer = () => {
   };
 
   return (
-    <section id="how-it-works" className="section bg-secondary/30">
+    <section id="how-it-works" className="section bg-secondary/30 overflow-hidden relative">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-primary/5 animate-float"></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 rounded-full bg-primary/10 animate-float" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute top-40 right-20 w-40 h-40 rounded-full bg-primary/5 animate-float" style={{ animationDelay: "2s" }}></div>
+      </div>
+      
       <div className="layout">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="flex justify-center mb-4">
             <span className="tag bg-accent text-accent-foreground mb-3">How It Works</span>
-            <h2 className="heading-2 mb-4">Smart Analysis, Zero Effort</h2>
-            <p className="text-muted-foreground body mb-6">
-              GrowEasy's AI analyzes your website to understand your business—no lengthy forms or setup process. Just enter your URL and we'll extract everything we need.
-            </p>
-            
+          </div>
+          <h2 className="heading-2 mb-4">Smart Analysis, Zero Effort</h2>
+          <p className="text-muted-foreground body mb-6 max-w-2xl mx-auto">
+            GrowEasy's AI analyzes your website to understand your business—no lengthy forms or setup process. Just enter your URL and we'll extract everything we need.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="animate-fade-in-up">
             <ul className="space-y-4 mb-8">
               {[
                 "Business name and tagline",
@@ -83,11 +94,11 @@ const WebsiteAnalyzer = () => {
                 "Brand voice and style",
                 "Existing partnerships and links"
               ].map((item, index) => (
-                <li key={index} className="flex items-start">
-                  <div className="mr-3 mt-1 bg-primary/10 rounded-full p-0.5">
+                <li key={index} className="flex items-start group hover:translate-x-1 transition-all duration-300">
+                  <div className="mr-3 mt-1 bg-primary/10 rounded-full p-1 group-hover:bg-primary/20 transition-colors">
                     <Check size={16} className="text-primary" />
                   </div>
-                  <span>{item}</span>
+                  <span className="group-hover:text-primary transition-colors">{item}</span>
                 </li>
               ))}
             </ul>
@@ -108,18 +119,22 @@ const WebsiteAnalyzer = () => {
                 type="submit" 
                 disabled={isAnalyzing || !url} 
                 isLoading={isAnalyzing}
+                className="relative overflow-hidden group"
               >
-                {isAnalyzing ? "Analyzing..." : "Try It Now"}
+                <span className="relative z-10">
+                  {isAnalyzing ? "Analyzing..." : "Try It Now"}
+                </span>
+                <span className="absolute inset-0 bg-primary/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
               </Button>
             </form>
           </div>
           
-          <div className="relative">
+          <div className="relative animate-fade-in-up" style={{ animationDelay: "200ms" }}>
             {/* Analysis Card */}
             <Card 
               variant="glass" 
               className={cn(
-                "w-full transition-all duration-500 ease-apple",
+                "w-full transition-all duration-500 ease-apple shadow-lg hover:shadow-xl",
                 isAnalyzing || analysisComplete ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
               )}
             >
@@ -210,9 +225,9 @@ const WebsiteAnalyzer = () => {
               </CardContent>
             </Card>
             
-            {/* Decorative elements */}
-            <div className="absolute -z-10 -top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-70"></div>
-            <div className="absolute -z-10 -bottom-10 -left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl opacity-70"></div>
+            {/* Enhanced decorative elements */}
+            <div className="absolute -z-10 -top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-70 animate-pulse"></div>
+            <div className="absolute -z-10 -bottom-10 -left-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl opacity-70 animate-pulse" style={{ animationDelay: "1s" }}></div>
           </div>
         </div>
       </div>

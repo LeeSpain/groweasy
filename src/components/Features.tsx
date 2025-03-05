@@ -44,14 +44,20 @@ const features = [
 
 const Features = () => {
   return (
-    <section id="features" className="section w-full bg-background">
+    <section id="features" className="section w-full bg-background relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl"></div>
+      </div>
+      
       <div className="layout">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="flex justify-center mb-4">
-            <span className="tag bg-accent text-accent-foreground mb-3">Features</span>
+            <span className="tag bg-accent text-accent-foreground mb-3 animate-fade-in-down">Features</span>
           </div>
-          <h2 className="heading-2 mb-4">Everything You Need to Grow</h2>
-          <p className="text-muted-foreground body-lg">
+          <h2 className="heading-2 mb-4 animate-fade-in-down" style={{ animationDelay: "100ms" }}>Everything You Need to Grow</h2>
+          <p className="text-muted-foreground body-lg animate-fade-in-down" style={{ animationDelay: "200ms" }}>
             GrowEasy combines powerful AI with simple controls to automate your business growth—no tech skills required.
           </p>
         </div>
@@ -60,14 +66,14 @@ const Features = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="border hover:shadow-hover transition-all duration-300 animate-in animate-fade-in-up"
-              style={{ "--index": index } as React.CSSProperties}
+              className="border hover:shadow-hover transition-all duration-300 animate-fade-in-up hover:translate-y-[-5px] group"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader>
-                <div className={cn("rounded-full w-12 h-12 flex items-center justify-center mb-4", feature.color)}>
+                <div className={cn("rounded-full w-12 h-12 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110", feature.color)}>
                   {feature.icon}
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className="text-xl group-hover:text-primary transition-colors">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">{feature.description}</CardDescription>

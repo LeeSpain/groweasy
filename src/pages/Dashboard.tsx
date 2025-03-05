@@ -73,36 +73,44 @@ const Dashboard = () => {
         <div className="layout py-8">
           {/* Trial notification */}
           {user.subscription.status === "trial" && user.subscription.trialEndDate && (
-            <TrialNotification 
-              trialEndDate={user.subscription.trialEndDate} 
-              onManageClick={() => setActiveTab("settings")}
-            />
+            <div className="mb-6 animate-fade-in-down">
+              <TrialNotification 
+                trialEndDate={user.subscription.trialEndDate} 
+                onManageClick={() => setActiveTab("settings")}
+              />
+            </div>
           )}
           
           {/* Alerts section */}
           {isLowOnTasks && (
-            <TaskUsageAlert
-              tasksUsed={user.subscription.tasksUsed}
-              tasksLimit={user.subscription.tasksLimit}
-              taskUsagePercentage={taskUsage}
-            />
+            <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "100ms" }}>
+              <TaskUsageAlert
+                tasksUsed={user.subscription.tasksUsed}
+                tasksLimit={user.subscription.tasksLimit}
+                taskUsagePercentage={taskUsage}
+              />
+            </div>
           )}
           
           {/* Main dashboard content */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Left sidebar with stats */}
-            <DashboardSidebar 
-              user={commandDemoUser}
-              subscription={userSubscription}
-            />
+            <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+              <DashboardSidebar 
+                user={commandDemoUser}
+                subscription={userSubscription}
+              />
+            </div>
             
             {/* Main content area */}
-            <DashboardTabs
-              user={commandDemoUser}
-              tasks={adaptedTasks}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
+            <div className="animate-fade-in-up" style={{ animationDelay: "300ms" }}>
+              <DashboardTabs
+                user={commandDemoUser}
+                tasks={adaptedTasks}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
+            </div>
           </div>
         </div>
       </div>
