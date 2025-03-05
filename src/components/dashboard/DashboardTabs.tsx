@@ -15,6 +15,15 @@ interface DashboardTabsProps {
 }
 
 const DashboardTabs = ({ user, tasks, onTabChange, activeTab }: DashboardTabsProps) => {
+  // Get trial information from user.subscription
+  // We need to handle the difference between the CommandDemoUser type (which uses "active", "inactive", "pending")
+  // and the AuthContext type which might use "trial"
+  
+  // Determine if this is a trial by checking if trialEndDate exists in user object
+  // This is a safer way to determine trial status without relying on status="trial"
+  const isTrialActive = 'trialEndDate' in user.subscription;
+  const trialEndDate = isTrialActive ? user.subscription.trialEndDate : undefined;
+  
   return (
     <div className="lg:col-span-3 space-y-6">
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
@@ -39,8 +48,8 @@ const DashboardTabs = ({ user, tasks, onTabChange, activeTab }: DashboardTabsPro
         
         <TabsContent value="settings" className="mt-6">
           <AccountSettings 
-            trialEndDate={user.subscription.status === "trial" ? user.subscription.startDate : undefined}
-            isTrialActive={user.subscription.status === "trial"}
+            trialEndDate={trialEndDate}
+            isTrialActive={isTrialActive}
           />
         </TabsContent>
       </Tabs>
