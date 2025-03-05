@@ -14,7 +14,7 @@ import SubscriptionDetails from "@/components/dashboard/SubscriptionDetails";
 import { ArrowUpRight, Bell, Settings } from "lucide-react";
 import { mockTasks } from "@/components/dashboard/mockData";
 import { useAuth } from "@/context/AuthContext";
-import { User as CommandDemoUser, Task as CommandDemoTask } from "@/components/command-demo/types";
+import { User as CommandDemoUser, Task as CommandDemoTask, UserSubscription as CommandDemoSubscription } from "@/components/command-demo/types";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("command");
@@ -32,7 +32,7 @@ const Dashboard = () => {
   const isLowOnTasks = user.subscription.tasksUsed >= user.subscription.tasksLimit * 0.8;
   
   // Convert AuthContext User to the format expected by UsageStats
-  const userSubscription = {
+  const userSubscription: CommandDemoSubscription = {
     planId: user.subscription.planId,
     status: user.subscription.status as "active" | "inactive" | "pending",
     startDate: user.subscription.nextBillingDate, // Use nextBillingDate as a fallback for startDate
@@ -68,9 +68,14 @@ const Dashboard = () => {
   }));
   
   // Create an adapted user specifically for DashboardHeader that includes businessName
-  const headerUser = {
-    ...user,
-    businessName: "My Business" // Add businessName for DashboardHeader
+  // Make sure it fully conforms to the User type from command-demo/types.ts
+  const headerUser: CommandDemoUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    businessName: "My Business",
+    subscription: userSubscription,
+    avatar: user.avatar
   };
   
   return (
