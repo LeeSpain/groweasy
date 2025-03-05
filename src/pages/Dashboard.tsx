@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import MainLayout from "@/layouts/MainLayout";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardTabs from "@/components/dashboard/DashboardTabs";
@@ -66,55 +65,53 @@ const Dashboard = () => {
   }));
   
   return (
-    <MainLayout>
-      <div className="bg-background min-h-screen">
-        <DashboardHeader user={commandDemoUser} />
+    <div className="bg-background min-h-screen">
+      <DashboardHeader user={commandDemoUser} />
+      
+      <div className="layout py-8">
+        {/* Trial notification */}
+        {user.subscription.status === "trial" && user.subscription.trialEndDate && (
+          <div className="mb-6 animate-fade-in-down">
+            <TrialNotification 
+              trialEndDate={user.subscription.trialEndDate} 
+              onManageClick={() => setActiveTab("settings")}
+            />
+          </div>
+        )}
         
-        <div className="layout py-8">
-          {/* Trial notification */}
-          {user.subscription.status === "trial" && user.subscription.trialEndDate && (
-            <div className="mb-6 animate-fade-in-down">
-              <TrialNotification 
-                trialEndDate={user.subscription.trialEndDate} 
-                onManageClick={() => setActiveTab("settings")}
-              />
-            </div>
-          )}
+        {/* Alerts section */}
+        {isLowOnTasks && (
+          <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "100ms" }}>
+            <TaskUsageAlert
+              tasksUsed={user.subscription.tasksUsed}
+              tasksLimit={user.subscription.tasksLimit}
+              taskUsagePercentage={taskUsage}
+            />
+          </div>
+        )}
+        
+        {/* Main dashboard content */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Left sidebar with stats */}
+          <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+            <DashboardSidebar 
+              user={commandDemoUser}
+              subscription={userSubscription}
+            />
+          </div>
           
-          {/* Alerts section */}
-          {isLowOnTasks && (
-            <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "100ms" }}>
-              <TaskUsageAlert
-                tasksUsed={user.subscription.tasksUsed}
-                tasksLimit={user.subscription.tasksLimit}
-                taskUsagePercentage={taskUsage}
-              />
-            </div>
-          )}
-          
-          {/* Main dashboard content */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Left sidebar with stats */}
-            <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-              <DashboardSidebar 
-                user={commandDemoUser}
-                subscription={userSubscription}
-              />
-            </div>
-            
-            {/* Main content area */}
-            <div className="animate-fade-in-up" style={{ animationDelay: "300ms" }}>
-              <DashboardTabs
-                user={commandDemoUser}
-                tasks={adaptedTasks}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
-            </div>
+          {/* Main content area */}
+          <div className="lg:col-span-3 animate-fade-in-up" style={{ animationDelay: "300ms" }}>
+            <DashboardTabs
+              user={commandDemoUser}
+              tasks={adaptedTasks}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
           </div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 };
 

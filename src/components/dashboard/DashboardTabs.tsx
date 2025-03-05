@@ -20,7 +20,7 @@ const DashboardTabs = ({ user, tasks, onTabChange, activeTab }: DashboardTabsPro
   const trialEndDate = user.subscription.trialEndDate;
   
   return (
-    <div className="lg:col-span-3 space-y-6">
+    <div className="w-full space-y-6">
       <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
         <TabsList className="w-full bg-background border">
           <TabsTrigger value="command" className="flex-1">Command Center</TabsTrigger>

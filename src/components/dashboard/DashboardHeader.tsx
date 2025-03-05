@@ -30,13 +30,15 @@ const DashboardHeader = ({ user }: DashboardHeaderProps) => {
   };
 
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-10">
-      <div className="layout py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-semibold">GrowEasy Dashboard</h1>
+    <header className="bg-background border-b border-border sticky top-0 z-50 py-3">
+      <div className="layout flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-semibold">GrowEasy</h1>
+          <span className="hidden md:inline-block text-muted-foreground">|</span>
+          <h2 className="hidden md:block text-muted-foreground">Dashboard</h2>
         </div>
         
-        <div className="flex-1 max-w-md mx-4 hidden md:block">
+        <div className="flex-1 max-w-md mx-6 hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input 

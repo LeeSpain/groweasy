@@ -1,5 +1,6 @@
 
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -8,6 +9,9 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
+  
   // Smooth scroll implementation
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
@@ -41,9 +45,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <Navbar />
+      {!isDashboard && <Navbar />}
       <main className="flex-1 w-full">{children}</main>
-      <Footer />
+      {!isDashboard && <Footer />}
     </div>
   );
 };
