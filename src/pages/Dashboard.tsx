@@ -67,10 +67,16 @@ const Dashboard = () => {
     timestamp: task.created
   }));
   
+  // Create an adapted user specifically for DashboardHeader that includes businessName
+  const headerUser = {
+    ...user,
+    businessName: "My Business" // Add businessName for DashboardHeader
+  };
+  
   return (
     <MainLayout>
       <div className="bg-background min-h-screen">
-        <DashboardHeader user={user} />
+        <DashboardHeader user={headerUser} />
         
         <div className="layout py-8">
           {/* Trial notification */}
