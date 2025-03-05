@@ -14,6 +14,7 @@ import SubscriptionDetails from "@/components/dashboard/SubscriptionDetails";
 import { ArrowUpRight, Bell, Settings } from "lucide-react";
 import { mockTasks } from "@/components/dashboard/mockData";
 import { useAuth } from "@/context/AuthContext";
+import { User as CommandDemoUser, Task as CommandDemoTask } from "@/components/command-demo/types";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("command");
@@ -29,6 +30,42 @@ const Dashboard = () => {
   // Calculate task usage
   const taskUsage = (user.subscription.tasksUsed / user.subscription.tasksLimit) * 100;
   const isLowOnTasks = user.subscription.tasksUsed >= user.subscription.tasksLimit * 0.8;
+  
+  // Convert AuthContext User to the format expected by UsageStats
+  const userSubscription = {
+    planId: user.subscription.planId,
+    status: user.subscription.status as "active" | "inactive" | "pending",
+    startDate: user.subscription.nextBillingDate, // Use nextBillingDate as a fallback for startDate
+    nextBillingDate: user.subscription.nextBillingDate,
+    tasksUsed: user.subscription.tasksUsed,
+    tasksLimit: user.subscription.tasksLimit,
+    websites: user.subscription.websitesUsed ? Array(user.subscription.websitesUsed).fill("example.com") : [],
+    websitesLimit: user.subscription.websitesLimit,
+    addOns: {
+      extraTasks: 0,
+      extraWebsites: 0,
+      customReports: false
+    }
+  };
+  
+  // Convert AuthContext User to the format expected by other components
+  const commandDemoUser: CommandDemoUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    businessName: "My Business", // Add default businessName for CommandDemoUser
+    subscription: userSubscription,
+    avatar: user.avatar
+  };
+  
+  // Adapt mockTasks to the CommandDemoTask format
+  const adaptedTasks: CommandDemoTask[] = mockTasks.map(task => ({
+    id: task.id,
+    type: task.type === "social" || task.type === "email" ? task.type : "email",
+    status: task.status === "completed" ? "completed" : task.status === "failed" ? "failed" : "pending",
+    content: task.description || "",
+    timestamp: task.created
+  }));
   
   return (
     <MainLayout>
@@ -88,7 +125,7 @@ const Dashboard = () => {
                   <CardTitle className="text-base font-medium">Usage Summary</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <UsageStats subscription={user.subscription} />
+                  <UsageStats subscription={userSubscription} />
                 </CardContent>
               </Card>
               
@@ -97,7 +134,7 @@ const Dashboard = () => {
                   <CardTitle className="text-base font-medium">Subscription</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SubscriptionDetails user={user} />
+                  <SubscriptionDetails user={commandDemoUser} />
                   <div className="mt-4">
                     <Button 
                       variant="outline" 
@@ -123,15 +160,15 @@ const Dashboard = () => {
                 </TabsList>
                 
                 <TabsContent value="command" className="mt-6">
-                  <CommandCenter user={user} />
+                  <CommandCenter user={commandDemoUser} />
                 </TabsContent>
                 
                 <TabsContent value="tasks" className="mt-6">
-                  <TaskHistory tasks={mockTasks} />
+                  <TaskHistory tasks={adaptedTasks} />
                 </TabsContent>
                 
                 <TabsContent value="websites" className="mt-6">
-                  <WebsiteManager user={user} />
+                  <WebsiteManager user={commandDemoUser} />
                 </TabsContent>
                 
                 <TabsContent value="settings" className="mt-6">
