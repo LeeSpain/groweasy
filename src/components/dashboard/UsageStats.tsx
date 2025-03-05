@@ -1,76 +1,77 @@
 
-import { User } from "@/components/command-demo/types";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui-custom/Card";
 import { Progress } from "@/components/ui/progress";
+import { Label } from "@/components/ui/label";
+import { UserSubscription } from "@/components/command-demo/types";
 
 interface UsageStatsProps {
-  user: User;
+  subscription: UserSubscription;
 }
 
-const UsageStats = ({ user }: UsageStatsProps) => {
-  // Calculate percentages
-  const taskPercentage = Math.min(100, Math.round((user.subscription.tasksUsed / user.subscription.tasksLimit) * 100));
-  const websitePercentage = Math.min(100, Math.round((user.subscription.websites.length / user.subscription.websitesLimit) * 100));
+export default function UsageStats({ subscription }: UsageStatsProps) {
+  const tasksPercentage = Math.min(
+    Math.round((subscription.tasksUsed / subscription.tasksLimit) * 100),
+    100
+  );
   
-  // Determine color based on usage
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 90) return "bg-red-500";
-    if (percentage >= 75) return "bg-yellow-500";
-    return "bg-primary";
-  };
+  const websitesPercentage = Math.min(
+    Math.round((subscription.websites.length / subscription.websitesLimit) * 100),
+    100
+  );
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="font-medium">Tasks Used</span>
-          <span>
-            {user.subscription.tasksUsed} / {user.subscription.tasksLimit}
-          </span>
-        </div>
-        <Progress 
-          value={taskPercentage} 
-          className="h-2"
-          indicatorClassName={getProgressColor(taskPercentage)}
-        />
-        <p className="text-xs text-muted-foreground">
-          {taskPercentage >= 90 
-            ? "You're almost out of tasks! Consider upgrading your plan."
-            : "Tasks reset on your billing date."}
-        </p>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="font-medium">Websites</span>
-          <span>
-            {user.subscription.websites.length} / {user.subscription.websitesLimit}
-          </span>
-        </div>
-        <Progress 
-          value={websitePercentage} 
-          className="h-2"
-          indicatorClassName={getProgressColor(websitePercentage)}
-        />
-        <p className="text-xs text-muted-foreground">
-          {websitePercentage >= 90 
-            ? "Approaching website limit. Consider adding more."
-            : "Add up to " + (user.subscription.websitesLimit - user.subscription.websites.length) + " more websites."}
-        </p>
-      </div>
-      
-      <div className="pt-3 border-t">
-        <div className="flex justify-between text-sm mb-1">
-          <span className="font-medium">Current Plan</span>
-          <span className="text-primary font-medium">
-            {user.subscription.planId.charAt(0).toUpperCase() + user.subscription.planId.slice(1)}
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Next billing: {new Date(user.subscription.nextBillingDate).toLocaleDateString()}
-        </p>
-      </div>
+    <div className="grid gap-4 md:grid-cols-2">
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium">Tasks Usage</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="text-xs text-muted-foreground">
+                {subscription.tasksUsed} of {subscription.tasksLimit} tasks used
+              </div>
+              <div className="text-xs font-medium">{tasksPercentage}%</div>
+            </div>
+            <Progress 
+              value={tasksPercentage} 
+              className="h-2"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+              <div>{subscription.tasksLimit - subscription.tasksUsed} tasks remaining</div>
+              {tasksPercentage > 80 && (
+                <div className="text-amber-500 font-medium">Consider upgrading</div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium">Websites</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="text-xs text-muted-foreground">
+                {subscription.websites.length} of {subscription.websitesLimit} websites connected
+              </div>
+              <div className="text-xs font-medium">{websitesPercentage}%</div>
+            </div>
+            <Progress 
+              value={websitesPercentage} 
+              className="h-2"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+              <div>{subscription.websitesLimit - subscription.websites.length} slots available</div>
+              {websitesPercentage > 80 && (
+                <div className="text-amber-500 font-medium">Consider upgrading</div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default UsageStats;
+}
