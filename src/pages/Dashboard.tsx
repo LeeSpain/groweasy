@@ -65,7 +65,7 @@ const Dashboard = () => {
                   <CardTitle className="text-base font-medium">Usage Summary</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <UsageStats user={user} />
+                  <UsageStats subscription={user.subscription} />
                 </CardContent>
               </Card>
               
