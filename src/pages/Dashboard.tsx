@@ -39,7 +39,15 @@ const Dashboard = () => {
       extraTasks: 0,
       extraWebsites: 0,
       customReports: false
-    }
+    },
+    // Add social accounts based on the ones defined in the overview
+    socialAccounts: {
+      twitter: "@janesbakery",
+      instagram: "janesbakery",
+      facebook: "Jane's Bakery Page"
+    },
+    // Default to chaos mode
+    chaosMode: "chaos"
   };
   
   // Add trial end date to the command demo user subscription if it exists in the auth user
@@ -52,18 +60,30 @@ const Dashboard = () => {
     id: user.id,
     name: user.name,
     email: user.email,
-    businessName: "My Business", // Add default businessName for CommandDemoUser
+    businessName: user.businessName || "My Business", // Add default businessName for CommandDemoUser
     subscription: userSubscription,
-    avatar: user.avatar
+    avatar: user.avatar,
+    website: "mybakery.com", // Default website based on overview
+    phoneNumber: "+353 123 456 789" // Default phone number based on overview
   };
   
   // Adapt mockTasks to the CommandDemoTask format
   const adaptedTasks: CommandDemoTask[] = mockTasks.map(task => ({
     id: task.id,
     type: task.type === "social" || task.type === "email" ? task.type : "email",
-    status: task.status === "completed" ? "completed" : task.status === "failed" ? "failed" : "pending",
+    status: task.status === "completed" ? "completed" : task.status === "failed" ? "failed" : 
+           task.status === "in-progress" ? "in-progress" : "pending",
     content: task.description || "",
-    timestamp: task.created
+    timestamp: task.created,
+    // Add extra details for social posts based on overview
+    details: task.type === "social" ? {
+      platform: "twitter",
+      engagement: {
+        likes: Math.floor(Math.random() * 10),
+        shares: Math.floor(Math.random() * 5),
+        comments: Math.floor(Math.random() * 3)
+      }
+    } : undefined
   }));
   
   return (
@@ -77,7 +97,7 @@ const Dashboard = () => {
         </div>
         
         {/* Trial notification */}
-        {user.subscription.status === "trial" && user.subscription.trialEndDate && (
+        {user.subscription.trialEndDate && (
           <div className="mb-6 animate-fade-in-down" style={{ animationDelay: "100ms" }}>
             <TrialNotification 
               trialEndDate={user.subscription.trialEndDate} 

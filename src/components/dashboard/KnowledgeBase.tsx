@@ -1,124 +1,202 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui-custom/Card";
 import { Button } from "@/components/ui-custom/Button";
-import { Book, MessageCircleQuestion, Search, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
-// Knowledge base topics and their related articles
-const KNOWLEDGE_TOPICS = [
-  {
-    id: "getting-started",
-    title: "Getting Started",
-    icon: <Book className="h-4 w-4" />,
-    articles: [
-      { id: "welcome", title: "Welcome to Our Platform", snippet: "An introduction to our platform and its capabilities" },
-      { id: "setup", title: "Setting Up Your Account", snippet: "Step-by-step guide to configure your workspace" },
-      { id: "first-task", title: "Creating Your First Task", snippet: "Learn how to create and manage automation tasks" }
-    ]
-  },
-  {
-    id: "automation",
-    title: "Automation Features",
-    icon: <MessageCircleQuestion className="h-4 w-4" />,
-    articles: [
-      { id: "social-automation", title: "Social Media Automation", snippet: "Schedule and automate your social media posts" },
-      { id: "email-campaigns", title: "Email Campaign Automation", snippet: "Create and schedule email marketing campaigns" }
-    ]
-  }
-];
+import { cn } from "@/lib/utils";
+import { Search, Book, FileText, HelpCircle, MessageCircle, Send, ArrowRight, Sparkles } from "lucide-react";
 
 const KnowledgeBase = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [isAiChatOpen, setIsAiChatOpen] = useState(false);
+  const [aiMessage, setAiMessage] = useState("");
+  const [messages, setMessages] = useState<{sender: "user" | "ai", content: string}[]>([
+    { sender: "ai", content: "Hi there! I'm your GrowEasy Assistant. How can I help you today?" }
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
   
-  // Filter articles based on search query
-  const filteredTopics = KNOWLEDGE_TOPICS.filter(topic => 
-    topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    topic.articles.some(article => 
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.snippet.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
+  const popularTopics = [
+    { icon: <Book className="h-4 w-4" />, title: "Getting Started Guide" },
+    { icon: <FileText className="h-4 w-4" />, title: "Using the Command Center" },
+    { icon: <HelpCircle className="h-4 w-4" />, title: "Automation Types Explained" },
+  ];
   
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    // In a real app, this would search the knowledge base
+    console.log("Searching for:", searchQuery);
+    setSearchQuery("");
+  };
+  
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiMessage.trim()) return;
+    
+    // Add user message
+    const userMessage = { sender: "user" as const, content: aiMessage };
+    setMessages(prev => [...prev, userMessage]);
+    setAiMessage("");
+    setIsTyping(true);
+    
+    // Simulate AI response after a delay
+    setTimeout(() => {
+      let response = "";
+      
+      if (aiMessage.toLowerCase().includes("automation")) {
+        response = "GrowEasy offers 20+ automation types including social media posts, email campaigns, lead scraping, and more. Each automation uses a certain number of tasks from your monthly allowance.";
+      } else if (aiMessage.toLowerCase().includes("task") || aiMessage.toLowerCase().includes("limit")) {
+        response = "Tasks are our way of measuring automation usage. Each plan has a monthly task limit: Starter (50), Growth (100), or Pro (200). You can always add extra tasks as needed.";
+      } else if (aiMessage.toLowerCase().includes("social") || aiMessage.toLowerCase().includes("post")) {
+        response = "Social media automation creates and schedules posts for your connected accounts. Each social post uses 1 task from your limit. Pro tip: batch your social content for maximum efficiency!";
+      } else {
+        response = "Thanks for your question! GrowEasy helps businesses automate their growth with minimal effort. Is there something specific about our platform you'd like to know more about?";
+      }
+      
+      setMessages(prev => [...prev, { sender: "ai", content: response }]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="bg-secondary/40 pb-3 border-b">
-        <CardTitle className="text-base font-medium flex items-center gap-2">
-          <Book className="h-4 w-4" /> Knowledge Base
+    <Card className="overflow-hidden border-border/50">
+      <CardHeader className="bg-secondary/40 pb-2 border-b">
+        <CardTitle className="text-base font-medium flex items-center justify-between">
+          <span>Knowledge Base</span>
+          {!isAiChatOpen && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-7 px-2 text-xs"
+              onClick={() => setIsAiChatOpen(true)}
+            >
+              <MessageCircle className="h-3 w-3 mr-1" />
+              Ask AI
+            </Button>
+          )}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        {/* Search bar */}
-        <div className="p-4 border-b">
-          <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search knowledge base..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-background"
-            />
-          </div>
-        </div>
-        
-        {/* Content area */}
-        <div className="p-4 max-h-[300px] overflow-y-auto">
-          {filteredTopics.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-8 text-center">
-              No articles match your search. Try different keywords.
-            </p>
-          ) : (
-            <>
-              {filteredTopics.map((topic) => (
-                <div key={topic.id} className="mb-4">
-                  <div 
-                    className="flex items-center justify-between cursor-pointer py-2"
-                    onClick={() => setSelectedTopic(selectedTopic === topic.id ? null : topic.id)}
+      
+      <CardContent className="p-4">
+        {!isAiChatOpen ? (
+          <>
+            <form onSubmit={handleSearch} className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search for help..."
+                  className="pl-9 pr-10 py-2 h-9 text-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Button 
+                  type="submit" 
+                  size="sm" 
+                  variant="ghost"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+            
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium">Popular Topics</h4>
+              <div className="space-y-2">
+                {popularTopics.map((topic, index) => (
+                  <button
+                    key={index}
+                    className="w-full flex items-center gap-2 p-2 hover:bg-secondary rounded-md text-left transition-colors"
                   >
-                    <h3 className="font-medium flex items-center gap-2">
-                      {topic.icon}
-                      {topic.title}
-                    </h3>
-                    <ArrowRight 
-                      className={`h-4 w-4 text-muted-foreground transition-transform ${
-                        selectedTopic === topic.id ? 'rotate-90' : ''
-                      }`}
-                    />
-                  </div>
-                  
-                  {/* Articles under this topic */}
-                  {selectedTopic === topic.id && (
-                    <div className="pl-6 space-y-3 mt-2">
-                      {topic.articles.map((article) => (
-                        <div 
-                          key={article.id}
-                          className="text-sm hover:bg-secondary/50 p-2 rounded-md cursor-pointer transition-colors"
-                        >
-                          <h4 className="font-medium">{article.title}</h4>
-                          <p className="text-muted-foreground text-xs mt-1">{article.snippet}</p>
-                        </div>
-                      ))}
-                    </div>
+                    <span className="text-primary">{topic.icon}</span>
+                    <span className="text-sm">{topic.title}</span>
+                  </button>
+                ))}
+              </div>
+              
+              <div className="pt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-between text-xs"
+                  onClick={() => setIsAiChatOpen(true)}
+                >
+                  <span className="flex items-center">
+                    <Sparkles className="h-3 w-3 mr-1.5 text-primary" />
+                    Ask AI Assistant
+                  </span>
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="h-80 flex flex-col">
+            <div className="flex-1 overflow-y-auto pr-2 mb-3 space-y-3">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "py-1.5 px-3 rounded-lg text-sm",
+                    message.sender === "user" 
+                      ? "bg-primary text-primary-foreground ml-6" 
+                      : "bg-muted mr-6"
                   )}
+                >
+                  {message.content}
                 </div>
               ))}
-            </>
-          )}
-        </div>
-        
-        {/* AI Assistant quick access */}
-        <div className="p-4 bg-secondary/30 border-t">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MessageCircleQuestion className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium">Need personalized help?</span>
+              {isTyping && (
+                <div className="bg-muted py-2 px-3 rounded-lg text-sm mr-6 flex items-center space-x-1">
+                  <div className="w-1.5 h-1.5 bg-foreground/60 rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 bg-foreground/60 rounded-full animate-bounce" style={{animationDelay: "0.2s"}}></div>
+                  <div className="w-1.5 h-1.5 bg-foreground/60 rounded-full animate-bounce" style={{animationDelay: "0.4s"}}></div>
+                </div>
+              )}
             </div>
-            <Button variant="outline" size="sm" className="text-xs">
-              Ask AI Assistant
-            </Button>
+            
+            <form onSubmit={handleSendMessage} className="relative">
+              <Input
+                type="text"
+                placeholder="Ask anything about GrowEasy..."
+                className="pr-10"
+                value={aiMessage}
+                onChange={(e) => setAiMessage(e.target.value)}
+                disabled={isTyping}
+              />
+              <Button
+                type="submit"
+                size="sm"
+                variant="ghost"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                disabled={!aiMessage.trim() || isTyping}
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+            
+            <div className="flex justify-between mt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs h-7 px-2"
+                onClick={() => setIsAiChatOpen(false)}
+              >
+                Back to KB
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-xs h-7 px-2 text-muted-foreground"
+                onClick={() => setMessages([{ sender: "ai", content: "Hi there! I'm your GrowEasy Assistant. How can I help you today?" }])}
+              >
+                Clear chat
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
