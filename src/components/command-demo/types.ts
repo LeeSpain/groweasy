@@ -1,3 +1,4 @@
+
 export interface Task {
   id: string;
   type: "social" | "email" | "sms" | "scrape" | "flash-sale" | "ad" | "blog" | "video" | "review" | "monitor" | "trend" | "loyalty" | "cart" | "calendar" | "payment" | "supplier" | "weather" | "surprise";
