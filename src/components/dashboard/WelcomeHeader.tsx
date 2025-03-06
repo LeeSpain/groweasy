@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui-custom/Card";
 import { User } from "@/components/command-demo/types";
@@ -18,7 +17,6 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     user.subscription.chaosMode || "chaos"
   );
 
-  // Update time every minute
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -27,7 +25,6 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Set greeting based on time of day
   useEffect(() => {
     const hours = currentTime.getHours();
     let newGreeting = "";
@@ -49,7 +46,6 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     setGreeting(newGreeting);
   }, [currentTime]);
 
-  // Format date as "Monday, June 10, 2023"
   const formattedDate = currentTime.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -57,22 +53,18 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     day: 'numeric'
   });
 
-  // Format time as "10:30 AM"
   const formattedTime = currentTime.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true
   });
 
-  // Check if subscription is in trial mode
   const isTrialSubscription = user.subscription.trialEndDate !== undefined;
   
-  // Calculate task usage percentage
   const taskUsagePercentage = (user.subscription.tasksUsed / user.subscription.tasksLimit) * 100;
 
   const handleChangeChaosMode = (mode: "chaos" | "precision" | "zen") => {
     setChaosMode(mode);
-    // In a real app, this would update the user's preference in the database
   };
 
   return (
@@ -82,7 +74,6 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
       chaosMode === "precision" ? "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20" :
       "bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20"
     )}>
-      {/* Decorative elements for chaos mode */}
       {chaosMode === "chaos" && (
         <>
           <div className="absolute top-0 left-1/4 w-1 h-8 bg-purple-500/70 animate-pulse"></div>
@@ -120,7 +111,7 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
               <span className="text-xs text-muted-foreground">Mode:</span>
               <div className="flex bg-background/80 rounded-lg p-0.5 backdrop-blur-sm">
                 <Button 
-                  variant={chaosMode === "chaos" ? "default" : "ghost"} 
+                  variant={chaosMode === "chaos" ? "primary" : "ghost"} 
                   size="sm" 
                   className={cn("text-xs h-7 px-2", chaosMode === "chaos" && "bg-purple-500 hover:bg-purple-600")}
                   onClick={() => handleChangeChaosMode("chaos")}
@@ -129,7 +120,7 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
                   Chaos
                 </Button>
                 <Button 
-                  variant={chaosMode === "precision" ? "default" : "ghost"} 
+                  variant={chaosMode === "precision" ? "primary" : "ghost"} 
                   size="sm" 
                   className="text-xs h-7 px-2"
                   onClick={() => handleChangeChaosMode("precision")}
@@ -137,7 +128,7 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
                   Precision
                 </Button>
                 <Button 
-                  variant={chaosMode === "zen" ? "default" : "ghost"} 
+                  variant={chaosMode === "zen" ? "primary" : "ghost"} 
                   size="sm" 
                   className="text-xs h-7 px-2"
                   onClick={() => handleChangeChaosMode("zen")}
@@ -163,7 +154,6 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
                   <span className="text-xs text-muted-foreground">of {user.subscription.tasksLimit}</span>
                 </div>
                 
-                {/* Chaos Meter */}
                 {chaosMode === "chaos" && (
                   <div className="mt-2 h-1.5 bg-background/50 rounded-full overflow-hidden">
                     <div 
