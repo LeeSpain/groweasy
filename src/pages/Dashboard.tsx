@@ -28,7 +28,7 @@ const Dashboard = () => {
   // Convert AuthContext User to the format expected by UsageStats
   const userSubscription: CommandDemoSubscription = {
     planId: user.subscription.planId,
-    status: user.subscription.status === "trial" ? "active" : user.subscription.status as "active" | "inactive" | "pending",
+    status: user.subscription.trialEndDate ? "trial" : "active", // Set status as trial if trialEndDate exists
     startDate: user.subscription.nextBillingDate, // Use nextBillingDate as a fallback for startDate
     nextBillingDate: user.subscription.nextBillingDate,
     tasksUsed: user.subscription.tasksUsed,

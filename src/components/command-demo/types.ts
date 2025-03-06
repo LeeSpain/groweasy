@@ -29,14 +29,14 @@ export interface Plan {
 
 export interface UserSubscription {
   planId: string;
-  status: "active" | "inactive" | "pending";
+  status: "active" | "inactive" | "pending" | "trial";
   startDate: string;
   nextBillingDate: string;
   tasksUsed: number;
   tasksLimit: number;
   websites: string[];
   websitesLimit: number;
-  trialEndDate?: string; // Add the optional trialEndDate property
+  trialEndDate?: string;
   addOns: {
     extraTasks: number;
     extraWebsites: number;

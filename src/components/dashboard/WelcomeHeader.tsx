@@ -59,6 +59,10 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
     hour12: true
   });
 
+  // Check if subscription is in trial mode
+  // We need to use a different approach since user.subscription.status doesn't include "trial"
+  const isTrialSubscription = user.subscription.trialEndDate !== undefined;
+
   return (
     <Card className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-100 dark:border-blue-800/30">
       <CardContent className="p-6">
@@ -73,7 +77,7 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
             </p>
             
             <p className="text-sm mt-2">
-              Your {user.subscription.status === "trial" ? "trial" : "subscription"} is active
+              Your {isTrialSubscription ? "trial" : "subscription"} is active
               {user.subscription.trialEndDate && ` until ${new Date(user.subscription.trialEndDate).toLocaleDateString()}`}.
             </p>
           </div>
@@ -82,16 +86,16 @@ const WelcomeHeader = ({ user }: WelcomeHeaderProps) => {
             <div className="bg-white/80 dark:bg-background/50 rounded-lg p-3 min-w-32 backdrop-blur-sm">
               <p className="text-sm font-medium">Tasks</p>
               <div className="flex justify-between items-center mt-1">
-                <span className="text-2xl font-bold">{subscription.tasksUsed}</span>
-                <span className="text-xs text-muted-foreground">of {subscription.tasksLimit}</span>
+                <span className="text-2xl font-bold">{user.subscription.tasksUsed}</span>
+                <span className="text-xs text-muted-foreground">of {user.subscription.tasksLimit}</span>
               </div>
             </div>
             
             <div className="bg-white/80 dark:bg-background/50 rounded-lg p-3 min-w-32 backdrop-blur-sm">
               <p className="text-sm font-medium">Websites</p>
               <div className="flex justify-between items-center mt-1">
-                <span className="text-2xl font-bold">{subscription.websites.length}</span>
-                <span className="text-xs text-muted-foreground">of {subscription.websitesLimit}</span>
+                <span className="text-2xl font-bold">{user.subscription.websites.length}</span>
+                <span className="text-xs text-muted-foreground">of {user.subscription.websitesLimit}</span>
               </div>
             </div>
           </div>
